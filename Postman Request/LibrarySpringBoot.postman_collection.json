@@ -12,11 +12,25 @@
 				{
 					"name": "Get Author",
 					"protocolProfileBehavior": {
-						"disableBodyPruning": true
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
 					},
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Origin",
+								"value": "app.test",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -26,29 +40,20 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost:8081/authors?id=324w",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"authors"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "324w"
-								}
-							]
-						}
+						"url": "http://localhost:8081/authors"
 					},
 					"response": []
 				},
 				{
 					"name": "Get All Author",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -75,6 +80,13 @@
 				{
 					"name": "Get Multiple Author",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -100,6 +112,13 @@
 				{
 					"name": "Create Author",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -118,6 +137,13 @@
 				{
 					"name": "Edit Author",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -136,6 +162,13 @@
 				{
 					"name": "Delete Author",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
@@ -173,6 +206,13 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -207,6 +247,13 @@
 				{
 					"name": "Get All Book",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -233,6 +280,13 @@
 				{
 					"name": "Get Multiple Book",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -258,6 +312,13 @@
 				{
 					"name": "Create Book",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -276,6 +337,13 @@
 				{
 					"name": "Edit Book",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -294,6 +362,13 @@
 				{
 					"name": "Delete Author Copy",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "1",
+								"username": "1"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
