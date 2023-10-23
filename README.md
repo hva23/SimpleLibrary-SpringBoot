@@ -83,7 +83,7 @@ To interact with the application, you can import the ```LibrarySpringBoot.postma
 ## Installation and Setup
 1. Clone the repository to your local machine.
 2. Configure the MySQL database by creating a new database and updating the database connection settings in the ```application.properties``` or ```DatabaseConfig.java``` file.
-3. Create required tables according to <a href = https://www.github.com/hva23/SimpleLibrary-SpringBoot#Database>this</a> section.
+3. Create required tables according to [this](#database) section.
 4. Build the project using your preferred build tool (Maven, Gradle, etc.).
 5. Run the application.
 6. Use Postman to make requests to the application's endpoints and observe the effects on the database.
