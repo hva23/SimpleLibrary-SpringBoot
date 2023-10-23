@@ -3,6 +3,19 @@ This project is a simple library management system implemented using Spring Boot
 1. User
 2. Book
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Database](#database)
+  - [BOOKS Table](#books)
+  - [USERS Table](#users)
+  - [Database DDL](#database-ddl)
+  - [Database Diagram](#database-diagram)
+- [Design Pattern](#design-pattern)
+- [Packages](#packages)
+- [Postman](#postman)
+- [Installation and Setup](#installation-and-setup)
+
 ## Overview
 This application is developed using the Spring Boot framework. The application allows users to manage books and authors in a library system. It provides a RESTful API for performing CRUD (Create, Read, Update, Delete) operations on the entities.
 
@@ -45,6 +58,7 @@ CREATE TABLE USERS
     constraint users_uk unique (NAME)
 );
 ```
+### Database Diagram
 <p align="center">
   <img src="https://github.com/hva23/SimpleLibrary-SpringBoot/blob/master/images/simplelibrary-springboot-tables.png?raw=true" alt="Database Diagram">
 </p>
