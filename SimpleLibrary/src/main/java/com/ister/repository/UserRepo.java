@@ -12,7 +12,7 @@ import java.util.*;
 @Repository
 public class UserRepo implements BaseRepo<User, String> {
 
-    private final String TABLE_NAME = "AUTHORS";
+    private final String TABLE_NAME = "USERS";
     JdbcTemplate jdbcTemplate;
     TransactionTemplate transactionTemplate;
 
@@ -30,7 +30,8 @@ public class UserRepo implements BaseRepo<User, String> {
                     user.getId(),
                     user.getName(),
                     user.getPassword(),
-                    user.getRole()
+                    user.getRole(),
+                    "1"
             };
             String sql = queryBuilder.create(TABLE_NAME, values);
             return jdbcTemplate.update(sql) > 0;
