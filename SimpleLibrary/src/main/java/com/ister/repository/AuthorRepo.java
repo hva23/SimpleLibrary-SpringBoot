@@ -29,7 +29,8 @@ public class AuthorRepo implements BaseRepo<Author, String> {
         return Boolean.TRUE.equals(transactionTemplate.execute(transactionStatus -> {
             Object[] values = new Object[]{
                     author.getId(),
-                    author.getName()
+                    author.getName(),
+                    author.getPassword()
             };
             String sql = queryBuilder.create(TABLE_NAME, values);
             return jdbcTemplate.update(sql) > 0;
