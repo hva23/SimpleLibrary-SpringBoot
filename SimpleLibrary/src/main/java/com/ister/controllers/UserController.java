@@ -21,13 +21,13 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> createAuthor(@RequestBody User authorBody) {
+    public ResponseEntity<User> createAuthor(@RequestBody User userBody) {
         try {
             User author = new User();
             author.setId(UUID.randomUUID().toString());
-            author.setName(authorBody.getName());
-            author.setPassword(authorBody.getPassword());
-            author.setRole(authorBody.getRole());
+            author.setName(userBody.getName());
+            author.setPassword(userBody.getPassword());
+            author.setRole(userBody.getRole());
 
             if (userService.add(author))
                 return new ResponseEntity<>(author, HttpStatus.CREATED);
@@ -39,13 +39,13 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editAuthor(@RequestBody User authorBody) {
+    public ResponseEntity<String> editAuthor(@RequestBody User userBody) {
         try {
             User author = new User();
-            author.setId(authorBody.getId());
-            author.setName(authorBody.getName());
-            author.setPassword(authorBody.getPassword());
-            author.setRole(authorBody.getRole());
+            author.setId(userBody.getId());
+            author.setName(userBody.getName());
+            author.setPassword(userBody.getPassword());
+            author.setRole(userBody.getRole());
 
             if (userService.edit(author))
                 return new ResponseEntity<>("Updated", HttpStatus.OK);
