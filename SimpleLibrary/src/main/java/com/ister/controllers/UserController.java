@@ -1,7 +1,7 @@
 package com.ister.controllers;
 
 
-import com.ister.model.Author;
+import com.ister.model.User;
 import com.ister.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +13,21 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
-public class AuthorController {
+public class UserController {
     private final AuthorService authorService;
 
-    public AuthorController(AuthorService authorService) {
+    public UserController(AuthorService authorService) {
         this.authorService = authorService;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Author> createAuthor(@RequestBody Author authorBody) {
+    public ResponseEntity<User> createAuthor(@RequestBody User authorBody) {
         try {
-            Author author = new Author();
+            User author = new User();
             author.setId(UUID.randomUUID().toString());
             author.setName(authorBody.getName());
-            author.setPassword(author.getPassword());
+            author.setPassword(authorBody.getPassword());
+            author.setRole(authorBody.getRole());
 
             if (authorService.add(author))
                 return new ResponseEntity<>(author, HttpStatus.CREATED);
@@ -38,12 +39,13 @@ public class AuthorController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editAuthor(@RequestBody Author authorBody) {
+    public ResponseEntity<String> editAuthor(@RequestBody User authorBody) {
         try {
-            Author author = new Author();
+            User author = new User();
             author.setId(authorBody.getId());
             author.setName(authorBody.getName());
-            author.setPassword(author.getPassword());
+            author.setPassword(authorBody.getPassword());
+            author.setRole(authorBody.getRole());
 
             if (authorService.edit(author))
                 return new ResponseEntity<>("Updated", HttpStatus.OK);
@@ -67,13 +69,13 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAuthor(@RequestParam(defaultValue = "") List<String> id) {
+    public ResponseEntity<List<User>> getAuthor(@RequestParam(defaultValue = "") List<String> id) {
         try {
             if (id.size() == 0) {
                 return new ResponseEntity<>(authorService.getAll(), HttpStatus.OK);
             } else {
-                List<Author> response = new ArrayList<>();
-                Author author;
+                List<User> response = new ArrayList<>();
+                User author;
 
                 for (String item : id) {
                     author = authorService.getById(item);
