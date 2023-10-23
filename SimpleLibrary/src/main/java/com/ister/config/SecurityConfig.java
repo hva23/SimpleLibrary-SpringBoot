@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 //Only admins and authors can access /books/* URL
                                 .requestMatchers("/books/*").hasAnyRole("ADMIN", "AUTHOR")
                                 //Other pages need authenticating
+                                //Currently at this state, we don't have any other pages
                                 .anyRequest().authenticated()
                         //Retrieve user and password from application.properties for authenticating
                         //Retrieve user and password from this.configure(AuthenticationManagerBuilder)
