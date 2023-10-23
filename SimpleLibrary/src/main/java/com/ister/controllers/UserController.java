@@ -2,7 +2,7 @@ package com.ister.controllers;
 
 
 import com.ister.model.User;
-import com.ister.service.AuthorService;
+import com.ister.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/authors")
 public class UserController {
-    private final AuthorService authorService;
+    private final UserService userService;
 
-    public UserController(AuthorService authorService) {
-        this.authorService = authorService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/add")
@@ -29,7 +29,7 @@ public class UserController {
             author.setPassword(authorBody.getPassword());
             author.setRole(authorBody.getRole());
 
-            if (authorService.add(author))
+            if (userService.add(author))
                 return new ResponseEntity<>(author, HttpStatus.CREATED);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,7 +47,7 @@ public class UserController {
             author.setPassword(authorBody.getPassword());
             author.setRole(authorBody.getRole());
 
-            if (authorService.edit(author))
+            if (userService.edit(author))
                 return new ResponseEntity<>("Updated", HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -59,7 +59,7 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<String> deleteAuthor(@RequestParam String id) {
         try {
-            if (authorService.delete(id))
+            if (userService.delete(id))
                 return new ResponseEntity<>("Success", HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,13 +72,13 @@ public class UserController {
     public ResponseEntity<List<User>> getAuthor(@RequestParam(defaultValue = "") List<String> id) {
         try {
             if (id.size() == 0) {
-                return new ResponseEntity<>(authorService.getAll(), HttpStatus.OK);
+                return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
             } else {
                 List<User> response = new ArrayList<>();
                 User author;
 
                 for (String item : id) {
-                    author = authorService.getById(item);
+                    author = userService.getById(item);
                     if (author != null)
                         response.add(author);
                     else
