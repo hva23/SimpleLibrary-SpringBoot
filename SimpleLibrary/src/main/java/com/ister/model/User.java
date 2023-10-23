@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "authors")
+@Table(name = "users")
 public class User extends BaseEntity<String> {
     private String password;
     private String role;
