@@ -24,8 +24,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/").permitAll()   //Home page doesn't need authenticating
-                                .anyRequest().authenticated()         //Other pages need authenticating
+                                //Home page doesn't need authenticating
+                                .requestMatchers("/").permitAll()
+                                //Only admins can access /authors/* URL
+                                .requestMatchers("/authors/*").hasRole("ADMIN")
+                                //Only admins and authors can access /books/* URL
+                                .requestMatchers("/books/*").hasAnyRole("ADMIN", "AUTHOR")
+                                //Other pages need authenticating
+                                .anyRequest().authenticated()
                         //Retrieve user and password from application.properties for authenticating
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -40,7 +46,11 @@ public class SecurityConfig {
         auth.inMemoryAuthentication()
                 .withUser("admin")
                 .password("admin")
-                .roles("ADMIN");
+                .roles("ADMIN")
+                .and()
+                .withUser("author")
+                .password("author")
+                .roles("AUTHOR");
     }
 
     @Bean
