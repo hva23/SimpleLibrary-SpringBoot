@@ -1,7 +1,7 @@
 package com.ister.config;
 
 
-import com.ister.filters.AuthorsFilter;
+import com.ister.filters.UserFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     @Bean
-    public FilterRegistrationBean<AuthorsFilter> registerFilter() {
-        FilterRegistrationBean<AuthorsFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        AuthorsFilter authorsFilter = new AuthorsFilter();
+    public FilterRegistrationBean<UserFilter> registerFilter() {
+        FilterRegistrationBean<UserFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        UserFilter userFilter = new UserFilter();
 
-        filterRegistrationBean.setFilter(authorsFilter);
+        filterRegistrationBean.setFilter(userFilter);
         filterRegistrationBean.addUrlPatterns("/authors");
         filterRegistrationBean.setOrder(3);
         return filterRegistrationBean;
