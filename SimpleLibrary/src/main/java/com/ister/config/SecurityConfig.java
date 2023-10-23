@@ -6,6 +6,7 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,8 +31,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                //Home page doesn't need authenticating
-                                .requestMatchers("/*").permitAll()
+                                //Home page and /* GET methods request doesn't need authentication (just for practicing)
+                                .requestMatchers(HttpMethod.GET,"/*").permitAll()
                                 //Only admins can access /authors/* URL
                                 .requestMatchers("/authors/*").hasAuthority(Roles.ROLE_ADMIN.toString())
                                 //Only admins and authors can access /books/* URL
