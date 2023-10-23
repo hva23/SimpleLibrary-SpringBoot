@@ -16,7 +16,7 @@ public class FilterConfig {
 
         filterRegistrationBean.setFilter(authorsFilter);
         filterRegistrationBean.addUrlPatterns("/authors");
-        filterRegistrationBean.setOrder(1);
+        filterRegistrationBean.setOrder(3);
         return filterRegistrationBean;
     }
 
