@@ -23,7 +23,7 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Book> createAuthor(@RequestBody Book bookBody) {
+    public ResponseEntity<Book> createBook(@RequestBody Book bookBody) {
         try {
             Book book = new Book();
             book.setId(bookBody.getId());
