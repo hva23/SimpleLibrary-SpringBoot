@@ -12,6 +12,7 @@ public class AuthorRowMapper implements RowMapper<Author> {
         Author author = new Author();
         author.setId(rs.getString("ID"));
         author.setName(rs.getString("NAME"));
+        author.setPassword(rs.getString("PASSWORD"));
         return author;
     }
 }
