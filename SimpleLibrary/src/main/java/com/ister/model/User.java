@@ -1,8 +1,8 @@
 package com.ister.model;
 
 
+import com.ister.common.Roles;
 import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "authors")
-public class Author extends BaseEntity<String> {
+public class User extends BaseEntity<String> {
     private String password;
+    private String role;
 }
