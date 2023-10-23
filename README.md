@@ -45,7 +45,9 @@ CREATE TABLE USERS
     constraint users_uk unique (NAME)
 );
 ```
-![alt text](https://github.com/hva23/SimpleLibrary-SpringBoot/blob/master/images/simplelibrary-springboot-tables.png?raw=true)
+<p align="center">
+  <img src="https://github.com/hva23/SimpleLibrary-SpringBoot/blob/master/images/simplelibrary-springboot-tables.png?raw=true" alt="Database Diagram">
+</p>
 
 ## Design Pattern
 The project follows the **Model-Repository-Service** design pattern to ensure a clear separation of concerns and maintainable code.
