@@ -1,17 +1,16 @@
 package com.ister.repository;
 
-import com.ister.mappers.AuthorRowMapper;
-import com.ister.model.Author;
+import com.ister.mappers.UserRowMapper;
+import com.ister.model.User;
 import com.ister.service.QueryBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.sql.DataSource;
 import java.util.*;
 
 @Repository
-public class AuthorRepo implements BaseRepo<Author, String> {
+public class UserRepo implements BaseRepo<User, String> {
 
     private final String TABLE_NAME = "AUTHORS";
     JdbcTemplate jdbcTemplate;
@@ -19,18 +18,19 @@ public class AuthorRepo implements BaseRepo<Author, String> {
 
     QueryBuilder queryBuilder = new QueryBuilder();
 
-    public AuthorRepo(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+    public UserRepo(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.transactionTemplate = transactionTemplate;
     }
 
     @Override
-    public boolean create(Author author) {
+    public boolean create(User user) {
         return Boolean.TRUE.equals(transactionTemplate.execute(transactionStatus -> {
             Object[] values = new Object[]{
-                    author.getId(),
-                    author.getName(),
-                    author.getPassword()
+                    user.getId(),
+                    user.getName(),
+                    user.getPassword(),
+                    user.getRole()
             };
             String sql = queryBuilder.create(TABLE_NAME, values);
             return jdbcTemplate.update(sql) > 0;
@@ -38,13 +38,13 @@ public class AuthorRepo implements BaseRepo<Author, String> {
     }
 
     @Override
-    public boolean update(Author author) {
+    public boolean update(User user) {
         return Boolean.TRUE.equals(transactionTemplate.execute(tranactionStatus -> {
             Map<String, Object> values = new HashMap<>();
-            values.put("NAME", author.getName());
+            values.put("NAME", user.getName());
 
             Map<String, Object> condition = new HashMap<>();
-            condition.put("ID", author.getId());
+            condition.put("ID", user.getId());
 
             String sql = queryBuilder.update(TABLE_NAME, values, condition);
             return jdbcTemplate.update(sql) > 0;
@@ -63,20 +63,20 @@ public class AuthorRepo implements BaseRepo<Author, String> {
     }
 
     @Override
-    public List<Author> findAll() {
+    public List<User> findAll() {
         return transactionTemplate.execute(transactionStatus -> {
            String sql = queryBuilder.read(TABLE_NAME, null, null);
-           return jdbcTemplate.query(sql, new AuthorRowMapper());
+           return jdbcTemplate.query(sql, new UserRowMapper());
         });
     }
 
     @Override
-    public Author findById(String id) {
+    public User findById(String id) {
         Map<String, Object> condition = new HashMap<>();
         condition.put("ID", id);
         return Objects.requireNonNull(transactionTemplate.execute(transactionStatus -> {
             String sql = queryBuilder.read(TABLE_NAME, null, condition);
-            return jdbcTemplate.query(sql, new AuthorRowMapper());
+            return jdbcTemplate.query(sql, new UserRowMapper());
         })).get(0);
     }
 }
