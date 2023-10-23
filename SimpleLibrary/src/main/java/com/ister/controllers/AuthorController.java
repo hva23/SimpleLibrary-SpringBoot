@@ -26,6 +26,7 @@ public class AuthorController {
             Author author = new Author();
             author.setId(UUID.randomUUID().toString());
             author.setName(authorBody.getName());
+            author.setPassword(author.getPassword());
 
             if (authorService.add(author))
                 return new ResponseEntity<>(author, HttpStatus.CREATED);
@@ -42,6 +43,7 @@ public class AuthorController {
             Author author = new Author();
             author.setId(authorBody.getId());
             author.setName(authorBody.getName());
+            author.setPassword(author.getPassword());
 
             if (authorService.edit(author))
                 return new ResponseEntity<>("Updated", HttpStatus.OK);
