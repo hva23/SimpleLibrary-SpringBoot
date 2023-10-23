@@ -8,19 +8,19 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AuthorService {
+public class UserService {
     private final UserRepo repository;
 
-    public AuthorService(UserRepo repo) {
+    public UserService(UserRepo repo) {
         this.repository = repo;
     }
 
     public boolean add(User user) {
         String role = user.getRole();
         //If user role isn't any of allowed return false otherwise do the creation
-        if (!role.contentEquals(Roles.ADMIN.toString()))
-            if (!role.contentEquals(Roles.AUTHOR.toString()))
-                if (!role.contentEquals(Roles.USER.toString())) return false;
+        if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
+            if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
+                if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
 
         return repository.create(user);
     }
@@ -28,9 +28,9 @@ public class AuthorService {
     public boolean edit(User user) {
         String role = user.getRole();
         //If user role isn't any of allowed return false otherwise do the updating
-        if (!role.contentEquals(Roles.ADMIN.toString()))
-            if (!role.contentEquals(Roles.AUTHOR.toString()))
-                if (!role.contentEquals(Roles.USER.toString())) return false;
+        if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
+            if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
+                if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
 
         return repository.update(user);
     }
