@@ -1,11 +1,8 @@
 package com.ister.repository;
 
 
-import com.ister.model.Author;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 

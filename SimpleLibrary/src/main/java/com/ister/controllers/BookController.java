@@ -2,7 +2,6 @@ package com.ister.controllers;
 
 
 import com.ister.model.Book;
-import com.ister.service.AuthorService;
 import com.ister.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/books")
