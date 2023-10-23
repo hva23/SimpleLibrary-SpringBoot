@@ -25,7 +25,7 @@ public class SecurityConfig {
                         auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                                 //Home page doesn't need authenticating
-                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/*").permitAll()
                                 //Only admins can access /authors/* URL
                                 .requestMatchers("/authors/*").hasRole("ADMIN")
                                 //Only admins and authors can access /books/* URL
@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 //Other pages need authenticating
                                 .anyRequest().authenticated()
                         //Retrieve user and password from application.properties for authenticating
+                        //Retrieve user and password from this.configure(AuthenticationManagerBuilder)
                 )
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable);  //Disable CSRF because of using postman to make requests
