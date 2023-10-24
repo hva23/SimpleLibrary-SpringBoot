@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/books")
@@ -67,7 +68,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> getBook(@RequestParam(defaultValue = "") List<Object> id) {
+    public ResponseEntity<List<Book>> getBook(@RequestParam(defaultValue = "") List<String> id) {
         try {
             //Get all books
             if (id.size() == 0) {
@@ -75,23 +76,29 @@ public class BookController {
 
             } else {
                 //Get type of id(Long or String) -> if Long call findById otherwise call findByAuthorId
+                final byte uuidLength = 36;
                 List<Book> response;
-                if (id.get(0) instanceof Long) {
+                if (id.get(0).length() < uuidLength) { //if id is not UUID
                     //Get multiple or just a single book
                     response = new ArrayList<>();
                     Book book;
 
-                    for (Object item : id) {
-                        book = bookService.getById((Long) item);
+                    for (String item : id) {
+                        book = bookService.getById(Long.valueOf(item));
                         if (book != null)
                             response.add(book);
                         else
-                            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                     }
                 } else {
-                    response = bookService.getByAuthorId(id.get(0).toString());
-                    if (response == null)
-                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    List<Book> tempList;
+                    response = new ArrayList<>();
+                    for(String item: id) {
+                        tempList = bookService.getByAuthorId(item);
+                        response = Stream.concat(response.stream(), tempList.stream()).toList();
+                    }
+                    if (response.size() == 0)
+                        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
