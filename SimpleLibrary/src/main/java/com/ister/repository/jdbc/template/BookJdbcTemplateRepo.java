@@ -83,6 +83,16 @@ public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
         });
     }
 
+    public Long getLastId() {
+        List<Book> userList = transactionTemplate.execute(transaction -> {
+            String sql = queryBuilder.readLast(TABLE_NAME, null);
+            return jdbcTemplate.query(sql, new BookRowMapper());
+        });
+        assert userList != null;
+        if (userList.size() == 0) return -1L;
+        return userList.get(0).getId();
+    }
+
 
     /* Private Methods */
     private boolean create(Book book) {
@@ -120,4 +130,5 @@ public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
         if (userList.size() == 0) return Optional.empty();
         return Optional.of(userList.get(0));
     }
+
 }
