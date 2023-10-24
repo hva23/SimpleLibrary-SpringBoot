@@ -67,21 +67,30 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> getBook(@RequestParam(defaultValue = "") List<Long> id) {
+    public ResponseEntity<List<Book>> getBook(@RequestParam(defaultValue = "") List<Object> id) {
         try {
             //Get all books
             if (id.size() == 0) {
                 return new ResponseEntity<>(bookService.getAll(), HttpStatus.OK);
-            } else {
-                //Get multiple or just a single book
-                List<Book> response = new ArrayList<>();
-                Book book;
 
-                for (Long item : id) {
-                    book = bookService.getById(item);
-                    if (book != null)
-                        response.add(book);
-                    else
+            } else {
+                //Get type of id(Long or String) -> if Long call findById otherwise call findByAuthorId
+                List<Book> response;
+                if (id.get(0) instanceof Long) {
+                    //Get multiple or just a single book
+                    response = new ArrayList<>();
+                    Book book;
+
+                    for (Object item : id) {
+                        book = bookService.getById((Long) item);
+                        if (book != null)
+                            response.add(book);
+                        else
+                            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                } else {
+                    response = bookService.getByAuthorId(id.get(0).toString());
+                    if (response == null)
                         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
                 return new ResponseEntity<>(response, HttpStatus.OK);
