@@ -1,4 +1,4 @@
-package com.ister.repository;
+package com.ister.repository.jdbc.template;
 
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @EnableAutoConfiguration
 @Repository
-public interface BaseRepo<T, PK> {
+public interface BaseJdbcTemplateRepo<T, PK> {
     public boolean create(T entity);
     public boolean update(T entity);
     public boolean delete(PK id);
