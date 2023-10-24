@@ -16,6 +16,13 @@ public class BookService {
     }
 
     public boolean add(Book book) {
+        //If using JpaRepository comment until next comment
+        if(book.getId() == null)
+        {
+            book.setId(repository.getLastId() + 1);
+        }
+        //until here
+        
         if(repository.findById(book.getId()).isPresent())
             return false;
         else
