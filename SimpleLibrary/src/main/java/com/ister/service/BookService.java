@@ -2,6 +2,8 @@ package com.ister.service;
 
 import com.ister.model.Book;
 import com.ister.repository.jdbc.template.BookJdbcTemplateRepo;
+import com.ister.repository.jpa.hibernate.BookJpaRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,21 +11,27 @@ import java.util.List;
 
 @Service
 public class BookService {
-    private final BookJdbcTemplateRepo repository;
 
-    public BookService(BookJdbcTemplateRepo repo) {
+    private final BookJpaRepo repository;
+
+    public BookService(BookJpaRepo repo) {
         this.repository = repo;
     }
 
     public boolean add(Book book) {
         //If using JpaRepository comment until next comment
-        if(book.getId() == null)
-        {
-            book.setId(repository.getLastId() + 1);
-        }
+//        if(book.getId() == null)
+//        {
+//            book.setId(repository.getLastId() + 1);
+//        }
         //until here
-        
-        if(repository.findById(book.getId()).isPresent())
+
+
+        //If using JdbcTemplate comment until next comment
+        book.setId(repository.findTopByOrderByIdDesc().getId() + 1);
+        //Until here
+
+        if(repository.findByName(book.getName()).isPresent())
             return false;
         else
             return repository.save(book) != null;
