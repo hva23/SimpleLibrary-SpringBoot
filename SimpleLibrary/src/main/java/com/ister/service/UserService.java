@@ -2,16 +2,16 @@ package com.ister.service;
 
 import com.ister.common.Roles;
 import com.ister.model.User;
-import com.ister.repository.UserRepo;
+import com.ister.repository.jdbc.template.UserJdbcTemplateRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepo repository;
+    private final UserJdbcTemplateRepo repository;
 
-    public UserService(UserRepo repo) {
+    public UserService(UserJdbcTemplateRepo repo) {
         this.repository = repo;
     }
 
