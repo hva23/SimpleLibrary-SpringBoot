@@ -58,7 +58,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@RequestParam String id) {
         try {
             if (userService.delete(id))
-                return new ResponseEntity<>("Success", HttpStatus.OK);
+                return new ResponseEntity<>("Deleted", HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
