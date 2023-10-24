@@ -1,7 +1,6 @@
 package com.ister.model;
 
 
-import com.ister.common.Roles;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
