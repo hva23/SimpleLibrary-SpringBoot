@@ -45,7 +45,7 @@ public class BookService {
 
     public boolean delete(Long id) {
         repository.deleteById(id);
-        return repository.findById(id).isPresent();
+        return repository.findById(id).isEmpty();
     }
 
     public List<Book> getAll() {
