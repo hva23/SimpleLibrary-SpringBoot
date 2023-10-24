@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@EnableAutoConfiguration
 @Repository
+@EnableAutoConfiguration
 public interface BaseJdbcTemplateRepo<T, PK> {
     T save(T entity);
     void deleteById(PK id);
@@ -17,3 +17,5 @@ public interface BaseJdbcTemplateRepo<T, PK> {
     Optional<T> findByName(String name);
 
 }
+
+
