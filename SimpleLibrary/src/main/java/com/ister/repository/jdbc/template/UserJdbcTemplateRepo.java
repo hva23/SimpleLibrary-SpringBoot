@@ -1,4 +1,4 @@
-package com.ister.repository;
+package com.ister.repository.jdbc.template;
 
 import com.ister.mappers.UserRowMapper;
 import com.ister.model.User;
@@ -10,7 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.*;
 
 @Repository
-public class UserRepo implements BaseRepo<User, String> {
+public class UserJdbcTemplateRepo implements BaseJdbcTemplateRepo<User, String> {
 
     private final String TABLE_NAME = "USERS";
     JdbcTemplate jdbcTemplate;
@@ -18,7 +18,7 @@ public class UserRepo implements BaseRepo<User, String> {
 
     QueryBuilder queryBuilder = new QueryBuilder();
 
-    public UserRepo(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+    public UserJdbcTemplateRepo(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.transactionTemplate = transactionTemplate;
     }
@@ -80,4 +80,5 @@ public class UserRepo implements BaseRepo<User, String> {
             return jdbcTemplate.query(sql, new UserRowMapper());
         })).get(0);
     }
+
 }
