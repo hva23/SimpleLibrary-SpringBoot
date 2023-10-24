@@ -39,24 +39,29 @@ The application uses MySQL as its database. It consists of two tables:
 Use this code block to create database and tables:
 ```SQL
 CREATE DATABASE LIBRARY;
+
 USE LIBRARY;
-CREATE TABLE BOOKS
-(
-    ID int not null primary key,
-    NAME varchar(50) not null,
-    AUTHOR_ID varchar(50) not null,
-    constraint books_fk foreign key (AUTHOR_ID) references users (ID)
+
+CREATE TABLE books (
+  ID int NOT NULL AUTO_INCREMENT,
+  NAME varchar(50) NOT NULL,
+  AUTHOR_ID varchar(50) NOT NULL,
+  UNIQUE KEY ID (ID),
+  KEY AUTHOR_ID (AUTHOR_ID),
+  CONSTRAINT books_fk FOREIGN KEY (AUTHOR_ID) REFERENCES users (ID)
 );
 
-CREATE TABLE USERS
-(
-    ID varchar(50) not null primary key,
-    NAME varchar(50) not null,
-    PASSWORD varchar(50) not null,
-    ROLE varchar(15) not null,
-    ENABLED tinyint(1) not null,
-    constraint users_uk unique (NAME)
+CREATE TABLE users (
+  ID varchar(50) NOT NULL,
+  NAME varchar(50) NOT NULL,
+  PASSWORD varchar(50) NOT NULL,
+  ROLE varchar(15) NOT NULL,
+  ENABLED tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (ID),
+  UNIQUE KEY users_uk (NAME)
 );
+
+
 ```
 ### Database Diagram
 <p align="center">
