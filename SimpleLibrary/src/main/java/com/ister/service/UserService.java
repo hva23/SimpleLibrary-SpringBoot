@@ -6,6 +6,7 @@ import com.ister.repository.jdbc.template.UserJdbcTemplateRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -16,27 +17,36 @@ public class UserService {
     }
 
     public boolean add(User user) {
-        String role = user.getRole();
-        //If user role isn't any of allowed return false otherwise do the creation
-        if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
-            if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
-                if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
+        if (repository.findByName(user.getName()).isPresent())
+            return false;
+        else {
+            String role = user.getRole();
+            //If user role isn't any of allowed return false otherwise do the creation
+            if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
+                if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
+                    if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
 
-        return repository.create(user);
+            user.setId(UUID.randomUUID().toString());
+            return repository.save(user) != null;
+        }
     }
 
     public boolean edit(User user) {
-        String role = user.getRole();
-        //If user role isn't any of allowed return false otherwise do the updating
-        if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
-            if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
-                if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
+        if (repository.findById(user.getId()).isPresent()) {
+            String role = user.getRole();
+            //If user role isn't any of allowed return false otherwise do the updating
+            if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
+                if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
+                    if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
 
-        return repository.update(user);
+            return repository.save(user) != null;
+        } else
+            return false;
     }
 
     public boolean delete(String id) {
-        return repository.delete(id);
+        repository.deleteById(id);
+        return repository.findById(id).isPresent();
     }
 
     public List<User> getAll() {
@@ -44,6 +54,6 @@ public class UserService {
     }
 
     public User getById(String id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 }
