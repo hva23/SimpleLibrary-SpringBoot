@@ -5,14 +5,15 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @EnableAutoConfiguration
 @Repository
 public interface BaseJdbcTemplateRepo<T, PK> {
-    public boolean create(T entity);
-    public boolean update(T entity);
-    public boolean delete(PK id);
-    public List<T> findAll();
-    public T findById(PK id);
+    T save(T entity);
+    void deleteById(PK id);
+    List<T> findAll();
+    Optional<T> findById(PK id);
+    Optional<T> findByName(String name);
 
 }
