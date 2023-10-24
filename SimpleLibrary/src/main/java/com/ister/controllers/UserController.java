@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
@@ -23,14 +22,13 @@ public class UserController {
     @PostMapping("/add")
     public ResponseEntity<User> createAuthor(@RequestBody User userBody) {
         try {
-            User author = new User();
-            author.setId(UUID.randomUUID().toString());
-            author.setName(userBody.getName());
-            author.setPassword(userBody.getPassword());
-            author.setRole(userBody.getRole());
+            User user = new User();
+            user.setName(userBody.getName());
+            user.setPassword(userBody.getPassword());
+            user.setRole(userBody.getRole());
 
-            if (userService.add(author))
-                return new ResponseEntity<>(author, HttpStatus.CREATED);
+            if (userService.add(user))
+                return new ResponseEntity<>(user, HttpStatus.CREATED);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
@@ -41,13 +39,13 @@ public class UserController {
     @PostMapping("/edit")
     public ResponseEntity<String> editAuthor(@RequestBody User userBody) {
         try {
-            User author = new User();
-            author.setId(userBody.getId());
-            author.setName(userBody.getName());
-            author.setPassword(userBody.getPassword());
-            author.setRole(userBody.getRole());
+            User user = new User();
+            user.setId(userBody.getId());
+            user.setName(userBody.getName());
+            user.setPassword(userBody.getPassword());
+            user.setRole(userBody.getRole());
 
-            if (userService.edit(author))
+            if (userService.edit(user))
                 return new ResponseEntity<>("Updated", HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
