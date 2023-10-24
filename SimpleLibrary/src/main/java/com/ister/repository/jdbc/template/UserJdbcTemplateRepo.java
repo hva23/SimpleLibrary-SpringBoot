@@ -24,8 +24,59 @@ public class UserJdbcTemplateRepo implements BaseJdbcTemplateRepo<User, String> 
     }
 
     @Override
-    public boolean create(User user) {
-        return Boolean.TRUE.equals(transactionTemplate.execute(transactionStatus -> {
+    public User save(User user) {
+        String id = user.getId();
+        boolean result;
+        boolean isPresent = findById(id).isPresent();
+
+        if (isPresent) {
+            result = update(user);
+        } else {
+            result = create(user);
+        }
+
+        return result ? user : null;
+    }
+
+
+    @Override
+    public void deleteById(String id) {
+        transactionTemplate.execute(transaction -> {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("ID", id);
+
+            String sql = queryBuilder.delete(TABLE_NAME, condition);
+            return jdbcTemplate.update(sql);
+        });
+    }
+
+    @Override
+    public List<User> findAll() {
+        return transactionTemplate.execute(transaction -> {
+            String sql = queryBuilder.read(TABLE_NAME, null, null);
+            return jdbcTemplate.query(sql, new UserRowMapper());
+        });
+    }
+
+    @Override
+    public Optional<User> findById(String id) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("ID", id);
+
+        return getUser(condition);
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("NAME", name);
+
+        return getUser(condition);
+    }
+
+    /* Private Methods */
+    boolean create(User user) {
+        return Boolean.TRUE.equals(transactionTemplate.execute(transaction -> {
             Object[] values = new Object[]{
                     user.getId(),
                     user.getName(),
@@ -38,9 +89,8 @@ public class UserJdbcTemplateRepo implements BaseJdbcTemplateRepo<User, String> 
         }));
     }
 
-    @Override
-    public boolean update(User user) {
-        return Boolean.TRUE.equals(transactionTemplate.execute(tranactionStatus -> {
+    boolean update(User user) {
+        return Boolean.TRUE.equals(transactionTemplate.execute(transaction -> {
             Map<String, Object> values = new HashMap<>();
             values.put("NAME", user.getName());
 
@@ -52,33 +102,14 @@ public class UserJdbcTemplateRepo implements BaseJdbcTemplateRepo<User, String> 
         }));
     }
 
-    @Override
-    public boolean delete(String id) {
-        return Boolean.TRUE.equals(transactionTemplate.execute(tranactionStatus -> {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("ID", id);
-
-            String sql = queryBuilder.delete(TABLE_NAME, condition);
-            return jdbcTemplate.update(sql) > 0;
-        }));
-    }
-
-    @Override
-    public List<User> findAll() {
-        return transactionTemplate.execute(transactionStatus -> {
-           String sql = queryBuilder.read(TABLE_NAME, null, null);
-           return jdbcTemplate.query(sql, new UserRowMapper());
-        });
-    }
-
-    @Override
-    public User findById(String id) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("ID", id);
-        return Objects.requireNonNull(transactionTemplate.execute(transactionStatus -> {
+    Optional<User> getUser(Map<String, Object> condition) {
+        List<User> userList = transactionTemplate.execute(transaction -> {
             String sql = queryBuilder.read(TABLE_NAME, null, condition);
             return jdbcTemplate.query(sql, new UserRowMapper());
-        })).get(0);
+        });
+        assert userList != null;
+        if(userList.size() == 0) return Optional.empty();
+        return Optional.of(userList.get(0));
     }
 
 }
