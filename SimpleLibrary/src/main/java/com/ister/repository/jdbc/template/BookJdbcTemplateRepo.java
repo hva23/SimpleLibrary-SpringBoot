@@ -7,10 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
@@ -18,6 +15,7 @@ public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
     private final String TABLE_NAME = "BOOKS";
 
     JdbcTemplate jdbcTemplate;
+
     TransactionTemplate transactionTemplate;
     QueryBuilder queryBuilder = new QueryBuilder();
 
@@ -27,8 +25,68 @@ public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
     }
 
     @Override
-    public boolean create(Book book) {
-        return Boolean.TRUE.equals(transactionTemplate.execute(transactionStatus -> {
+    public Book save(Book book) {
+        Long id = book.getId();
+        boolean result;
+        boolean isPresent = findById(id).isPresent();
+
+        if (isPresent) {
+            result = update(book);
+        } else {
+            result = create(book);
+        }
+
+        return result ? book : null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        transactionTemplate.execute(tranaction -> {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("ID", id);
+
+            String sql = queryBuilder.delete(TABLE_NAME, condition);
+            return jdbcTemplate.update(sql);
+        });
+    }
+
+    @Override
+    public List<Book> findAll() {
+        return transactionTemplate.execute(tranaction -> {
+            String sql = queryBuilder.read(TABLE_NAME, null, null);
+            return jdbcTemplate.query(sql, new BookRowMapper());
+        });
+    }
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("ID", id);
+
+        return getBook(condition);
+    }
+
+    @Override
+    public Optional<Book> findByName(String name) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("NAME", name);
+
+        return getBook(condition);
+    }
+
+    public List<Book> findByAuthorId(String id) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("AUTHOR_ID", id);
+        return transactionTemplate.execute(tranaction -> {
+            String sql = queryBuilder.read(TABLE_NAME, null, condition);
+            return jdbcTemplate.query(sql, new BookRowMapper());
+        });
+    }
+
+
+    /* Private Methods */
+    private boolean create(Book book) {
+        return Boolean.TRUE.equals(transactionTemplate.execute(tranaction -> {
             Object[] values = new Object[]{
                     book.getId(),
                     book.getName(),
@@ -39,9 +97,8 @@ public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
         }));
     }
 
-    @Override
-    public boolean update(Book book) {
-        return Boolean.TRUE.equals(transactionTemplate.execute(tranactionStatus -> {
+    private boolean update(Book book) {
+        return Boolean.TRUE.equals(transactionTemplate.execute(tranaction -> {
             Map<String, Object> values = new HashMap<>();
             values.put("NAME", book.getName());
             values.put("AUTHOR_ID", book.getAuthorId());
@@ -54,41 +111,13 @@ public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
         }));
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return Boolean.TRUE.equals(transactionTemplate.execute(tranactionStatus -> {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("ID", id);
-
-            String sql = queryBuilder.delete(TABLE_NAME, condition);
-            return jdbcTemplate.update(sql) > 0;
-        }));
-    }
-
-    @Override
-    public List<Book> findAll() {
-        return transactionTemplate.execute(transactionStatus -> {
-            String sql = queryBuilder.read(TABLE_NAME, null, null);
-            return jdbcTemplate.query(sql, new BookRowMapper());
-        });
-    }
-
-    @Override
-    public Book findById(Long id) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("ID", id);
-        return Objects.requireNonNull(transactionTemplate.execute(transactionStatus -> {
-            String sql = queryBuilder.read(TABLE_NAME, null, condition);
-            return jdbcTemplate.query(sql, new BookRowMapper());
-        })).get(0);
-    }
-
-    public List<Book> findByAuthorId(String id) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("AUTHOR_ID", id);
-        return transactionTemplate.execute(transactionStatus -> {
+    Optional<Book> getBook(Map<String, Object> condition) {
+        List<Book> userList = transactionTemplate.execute(transaction -> {
             String sql = queryBuilder.read(TABLE_NAME, null, condition);
             return jdbcTemplate.query(sql, new BookRowMapper());
         });
+        assert userList != null;
+        if (userList.size() == 0) return Optional.empty();
+        return Optional.of(userList.get(0));
     }
 }
