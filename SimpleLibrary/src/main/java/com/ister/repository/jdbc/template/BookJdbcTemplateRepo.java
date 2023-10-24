@@ -1,8 +1,6 @@
-package com.ister.repository;
+package com.ister.repository.jdbc.template;
 
 import com.ister.mappers.BookRowMapper;
-import com.ister.mappers.BookRowMapper;
-import com.ister.model.Book;
 import com.ister.model.Book;
 import com.ister.service.QueryBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Repository
-public class BookRepo implements BaseRepo<Book, Long> {
+public class BookJdbcTemplateRepo implements BaseJdbcTemplateRepo<Book, Long> {
 
     private final String TABLE_NAME = "BOOKS";
 
@@ -23,7 +21,7 @@ public class BookRepo implements BaseRepo<Book, Long> {
     TransactionTemplate transactionTemplate;
     QueryBuilder queryBuilder = new QueryBuilder();
 
-    public BookRepo(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+    public BookJdbcTemplateRepo(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.transactionTemplate = transactionTemplate;
     }
@@ -83,5 +81,14 @@ public class BookRepo implements BaseRepo<Book, Long> {
             String sql = queryBuilder.read(TABLE_NAME, null, condition);
             return jdbcTemplate.query(sql, new BookRowMapper());
         })).get(0);
+    }
+
+    public List<Book> findByAuthorId(String id) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("AUTHOR_ID", id);
+        return transactionTemplate.execute(transactionStatus -> {
+            String sql = queryBuilder.read(TABLE_NAME, null, condition);
+            return jdbcTemplate.query(sql, new BookRowMapper());
+        });
     }
 }
