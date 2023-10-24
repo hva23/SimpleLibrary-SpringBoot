@@ -16,14 +16,21 @@ public class BookService {
     }
 
     public boolean add(Book book) {
-        return repository.create(book);
+        if(repository.findById(book.getId()).isPresent())
+            return false;
+        else
+            return repository.save(book) != null;
     }
     public boolean edit(Book book) {
-        return repository.update(book);
+        if(repository.findById(book.getId()).isPresent())
+            return repository.save(book) != null;
+        else
+            return false;
     }
 
     public boolean delete(Long id) {
-        return repository.delete(id);
+        repository.deleteById(id);
+        return repository.findById(id).isPresent();
     }
 
     public List<Book> getAll() {
@@ -31,7 +38,7 @@ public class BookService {
     }
 
     public Book getById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
     public List<Book> getByAuthorId(String id){
         return repository.findByAuthorId(id);
