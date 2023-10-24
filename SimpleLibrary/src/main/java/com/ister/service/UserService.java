@@ -3,6 +3,7 @@ package com.ister.service;
 import com.ister.common.Roles;
 import com.ister.model.User;
 import com.ister.repository.jdbc.template.UserJdbcTemplateRepo;
+import com.ister.repository.jpa.hibernate.UserJpaRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-    private final UserJdbcTemplateRepo repository;
+    //UserJpaRepo
+    //UserJdbcTemplateRepo
+    private final UserJpaRepo repository;
 
-    public UserService(UserJdbcTemplateRepo repo) {
+    public UserService(UserJpaRepo repo) {
         this.repository = repo;
     }
 
@@ -46,7 +49,7 @@ public class UserService {
 
     public boolean delete(String id) {
         repository.deleteById(id);
-        return repository.findById(id).isPresent();
+        return repository.findById(id).isEmpty();
     }
 
     public List<User> getAll() {
