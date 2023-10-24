@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> createAuthor(@RequestBody User userBody) {
+    public ResponseEntity<User> createUser(@RequestBody User userBody) {
         try {
             User user = new User();
             user.setName(userBody.getName());
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editAuthor(@RequestBody User userBody) {
+    public ResponseEntity<String> editUser(@RequestBody User userBody) {
         try {
             User user = new User();
             user.setId(userBody.getId());
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAuthor(@RequestParam String id) {
+    public ResponseEntity<String> deleteUser(@RequestParam String id) {
         try {
             if (userService.delete(id))
                 return new ResponseEntity<>("Success", HttpStatus.OK);
@@ -67,18 +67,18 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAuthor(@RequestParam(defaultValue = "") List<String> id) {
+    public ResponseEntity<List<User>> getUser(@RequestParam(defaultValue = "") List<String> id) {
         try {
             if (id.size() == 0) {
                 return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
             } else {
                 List<User> response = new ArrayList<>();
-                User author;
+                User user;
 
                 for (String item : id) {
-                    author = userService.getById(item);
-                    if (author != null)
-                        response.add(author);
+                    user = userService.getById(item);
+                    if (user != null)
+                        response.add(user);
                     else
                         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
