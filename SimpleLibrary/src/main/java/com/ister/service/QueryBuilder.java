@@ -62,6 +62,26 @@ public class QueryBuilder {
         return query;
     }
 
+    public String readLast(@NotNull String tableName, @Nullable String[] columns) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String query;
+
+        //Constructing columns like column1, column2, column3, ... OR *.
+        if (columns != null && columns.length > 0) {
+            for (String column : columns) {
+                stringBuilder.append(column);
+                stringBuilder.append(", ");
+            }
+            stringBuilder.deleteCharAt(stringBuilder.length() - 2); //Delete last , character
+        } else stringBuilder.append("*");
+
+        //SELECT * FROM books ORDER BY ID DESC LIMIT 1
+        query = String.format("SELECT %s FROM %S ORDER BY ID DESC LIMIT 1", stringBuilder, tableName);
+
+        return query;
+    }
+
+
     public String update(@NotNull String tableName, @NotNull Map<String, Object> columnsAndValues, @Nullable Map<String, Object> conditions) {
         String columnsAndValuesSequence;
         String conditionsSequence;
