@@ -59,7 +59,7 @@ public class BookController {
     public ResponseEntity<String> deleteBook(@RequestParam Long id) {
         try {
             if (bookService.delete(id))
-                return new ResponseEntity<>("Success", HttpStatus.OK);
+                return new ResponseEntity<>("Deleted", HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
