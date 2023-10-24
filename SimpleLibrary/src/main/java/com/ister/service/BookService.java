@@ -1,7 +1,7 @@
 package com.ister.service;
 
 import com.ister.model.Book;
-import com.ister.repository.BookRepo;
+import com.ister.repository.jdbc.template.BookJdbcTemplateRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.List;
 
 @Service
 public class BookService {
-    private final BookRepo repository;
+    private final BookJdbcTemplateRepo repository;
 
-    public BookService(BookRepo repo) {
+    public BookService(BookJdbcTemplateRepo repo) {
         this.repository = repo;
     }
 
@@ -32,5 +32,8 @@ public class BookService {
 
     public Book getById(Long id) {
         return repository.findById(id);
+    }
+    public List<Book> getByAuthorId(String id){
+        return repository.findByAuthorId(id);
     }
 }
