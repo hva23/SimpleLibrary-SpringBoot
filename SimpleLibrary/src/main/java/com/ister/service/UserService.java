@@ -23,11 +23,11 @@ public class UserService {
         if (repository.findByName(user.getName()).isPresent())
             return false;
         else {
-            String role = user.getRole();
+            Roles role = user.getRole();
             //If user role isn't any of allowed return false otherwise do the creation
-            if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
-                if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
-                    if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
+            if (role != Roles.ROLE_ADMIN)
+                if (role != Roles.ROLE_AUTHOR)
+                    if (role != Roles.ROLE_USER) return false;
 
             user.setId(UUID.randomUUID().toString());
             return repository.save(user) != null;
@@ -36,11 +36,11 @@ public class UserService {
 
     public boolean edit(User user) {
         if (repository.findById(user.getId()).isPresent()) {
-            String role = user.getRole();
+            Roles role = user.getRole();
             //If user role isn't any of allowed return false otherwise do the updating
-            if (!role.contentEquals(Roles.ROLE_ADMIN.toString()))
-                if (!role.contentEquals(Roles.ROLE_AUTHOR.toString()))
-                    if (!role.contentEquals(Roles.ROLE_USER.toString())) return false;
+            if (role != Roles.ROLE_ADMIN)
+                if (role != Roles.ROLE_AUTHOR)
+                    if (role != Roles.ROLE_USER) return false;
 
             return repository.save(user) != null;
         } else
