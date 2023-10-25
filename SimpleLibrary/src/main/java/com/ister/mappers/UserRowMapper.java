@@ -1,5 +1,6 @@
 package com.ister.mappers;
 
+import com.ister.common.Roles;
 import com.ister.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -13,7 +14,7 @@ public class UserRowMapper implements RowMapper<User> {
         user.setId(rs.getString("ID"));
         user.setName(rs.getString("NAME"));
         user.setPassword(rs.getString("PASSWORD"));
-        user.setRole(rs.getString("ROLE"));
+        user.setRole(Roles.valueOf(rs.getString("ROLE")));
         return user;
     }
 }
