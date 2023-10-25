@@ -1,16 +1,20 @@
-package com.ister.config;
+package com.ister.config.security;
 
 
 import com.ister.common.Roles;
+import jakarta.annotation.Resource;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,11 +24,21 @@ import javax.sql.DataSource;
 @Configuration
 public class SecurityConfig {
 
+    //Uncomment this if you are using jdbcAuthentication
+    /*
     private final DataSource dataSource;
 
     public SecurityConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+    */
+
+    //Uncomment this if you are using implementation of UserDetailsService and UserDetails
+    private final UserDetailsServiceImpl userDetailsService;
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -40,7 +54,6 @@ public class SecurityConfig {
                                 //Other pages need authenticating
                                 //Currently at this state, we don't have any other pages
                                 .anyRequest().authenticated()
-                        //Retrieve user and password from application.properties for authenticating
                         //Retrieve user and password from this.configure(AuthenticationManagerBuilder)
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -64,11 +77,6 @@ public class SecurityConfig {
                 .roles("AUTHOR");
         */
 
-        //Use this if you want to add authorization based on your database
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("SELECT NAME, PASSWORD, ENABLED FROM USERS WHERE NAME = ?")
-                .authoritiesByUsernameQuery("SELECT NAME, ROLE FROM USERS WHERE NAME = ?");
         //Add these methods to generate automatically tables for authorization
         /*
                 .withDefaultSchema()
@@ -83,8 +91,26 @@ public class SecurityConfig {
                                 .roles("ADMIN")
                 );
         */
+
+        //Use this if you want to add authorization based on your database, and you are not using UserDetailsService
+        /*
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .usersByUsernameQuery("SELECT NAME, PASSWORD, ENABLED FROM USERS WHERE NAME = ?")
+                .authoritiesByUsernameQuery("SELECT NAME, ROLE FROM USERS WHERE NAME = ?");
+        */
+
+        //Use this if you have UserDetails and UserDetailsService implementation
+        auth.authenticationProvider(authenticationProvider());
     }
 
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
