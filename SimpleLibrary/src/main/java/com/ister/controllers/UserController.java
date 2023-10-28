@@ -1,10 +1,19 @@
 package com.ister.controllers;
 
 
+import com.ister.config.security.UserDetailsServiceImpl;
 import com.ister.model.User;
 import com.ister.service.UserService;
+import com.ister.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,9 +23,22 @@ import java.util.List;
 @RequestMapping("/authors")
 public class UserController {
     private final UserService userService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<String> createAuthenticationToken(@RequestBody User userBody) {
+        final User user = (User) userDetailsService.loadUserByUsername(userBody.getUsername());
+        if (!user.getPassword().equals(userBody.getPassword()))
+            return new ResponseEntity<>("Incorrect password or username", HttpStatus.FORBIDDEN);
+        final String jwt = jwtUtil.generateToken(user);
+        return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -82,7 +104,7 @@ public class UserController {
                     else
                         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                    return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
