@@ -2,6 +2,7 @@ package com.ister.config.security;
 
 
 import com.ister.common.Roles;
+import com.ister.filters.JwtRequestFilter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +10,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -35,8 +39,10 @@ public class SecurityConfig {
 
     //Uncomment this if you are using implementation of UserDetailsService and UserDetails
     private final UserDetailsServiceImpl userDetailsService;
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    private final JwtRequestFilter jwtRequestFilter;
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtRequestFilter jwtRequestFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Bean
@@ -47,6 +53,8 @@ public class SecurityConfig {
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                                 //Home page and /* GET methods request doesn't need authentication (just for practicing)
                                 .requestMatchers(HttpMethod.GET,"/*").permitAll()
+                                //Allow users to authenticate
+                                .requestMatchers(HttpMethod.POST, "/authors/authenticate").permitAll()
                                 //Only admins can access /authors/* URL
                                 .requestMatchers("/authors/*").hasAuthority(Roles.ROLE_ADMIN.toString())
                                 //Only admins and authors can access /books/* URL
@@ -56,6 +64,8 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                         //Retrieve user and password from this.configure(AuthenticationManagerBuilder)
                 )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable);  //Disable CSRF because of using postman to make requests
         return http.build();
