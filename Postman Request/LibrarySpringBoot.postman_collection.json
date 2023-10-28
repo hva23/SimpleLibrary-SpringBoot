@@ -121,7 +121,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"omid hazeri\",\r\n    \"password\" : \"default_pass\",\r\n    \"role\" : \"ROLE_AUTHOR\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"mohammad samadi\",\r\n    \"password\" : \"default_pass\",\r\n    \"role\" : \"ROLE_AUTHOR\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -138,8 +138,8 @@
 						"auth": {
 							"type": "basic",
 							"basic": {
-								"username": "hossein",
-								"password": "2244"
+								"password": "2244",
+								"username": "hossein"
 							}
 						},
 						"method": "POST",
@@ -190,6 +190,27 @@
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get JWT",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"kiarash javadi\",\r\n    \"password\" : \"default_pass\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/authors/authenticate"
 					},
 					"response": []
 				}
@@ -351,15 +372,15 @@
 						"auth": {
 							"type": "basic",
 							"basic": {
-								"password": "2244",
-								"username": "hamzeh"
+								"username": "zahra marami",
+								"password": "default_pass"
 							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\" : 3,\r\n    \"name\" : \"new name\",\r\n    \"authorId\" : \"1\"\r\n}",
+							"raw": "{\r\n    \"id\" : 10,\r\n    \"name\" : \"hossein's new book\",\r\n    \"authorId\" : \"48cbc2f4-222a-45d6-8c5e-1d53a00f4a32\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -403,6 +424,32 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "JWT",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJob3NzZWluIiwiZXhwIjoxNjk4NTE5Nzc5LCJpYXQiOjE2OTg0ODM3Nzl9.s-5IwCZCTj2vW9a5H9RQI74FFh2H_l1d479x2Q9NYdg"
 		}
 	]
 }
