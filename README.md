@@ -83,7 +83,7 @@ The project is organized into several packages, located in the com.ister package
 9. service: Contains classes that follow the Service design pattern. They act as a layer between user requests and the database, encapsulating the business logic and providing services to the controllers.
 
 ## Postman
-To interact with the application, you can import the ```LibrarySpringBoot.postman_collection.json``` file located in the "Postman Request" directory. This Postman collection provides a set of preconfigured requests that you can use to interact with the application's endpoints.
+To interact with the application, you can import the ```LibrarySpringBoot.postman_collection.json``` file located in the "Postman Request" directory. This Postman collection provides a set of preconfigured requests that you can use to interact with the application's endpoints. Pay attention to adding the Authorization header to requests that require authorization for accepting the request.
 
 ## Installation and Setup
 1. Clone the repository to your local machine.
